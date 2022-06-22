@@ -8,6 +8,7 @@ import { StockSearchConponent } from './stock/stock-search/stock-search.componen
 import { StockDetailsComponent } from './stock/stock-details/stock-details.component';
 import { StockService } from './stock/stock.service';
 import { stockAppRoutes } from './routes';
+import { StockSummaryComponent } from './stock/stock-summary/stock-summary.component';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, RouterModule.forRoot(stockAppRoutes)],
@@ -15,6 +16,7 @@ import { stockAppRoutes } from './routes';
     StockAppComponent,
     StockSearchConponent,
     StockDetailsComponent,
+    StockSummaryComponent,
   ],
   providers: [StockService],
   bootstrap: [StockAppComponent],

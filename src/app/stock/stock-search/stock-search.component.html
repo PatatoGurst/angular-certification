@@ -1,7 +1,18 @@
-<div class="row">
-  <div class="col-md-4">
-    <form autocomplete="off">
-      <span>Enter the symbol of a stock to track (i.e. AAPL, TSLA, GOOGL)</span>
-    </form>
+<div class="stock-search-container">
+  <form autocomplete="off">
+    <div class="row">
+      <div class="col-md-4">
+        <span
+          >Enter the symbol of a stock to track (i.e. AAPL, TSLA, GOOGL)</span
+        >
+      </div>
+    </div>
+  </form>
+</div>
+<!-- 
+<div *ngIf="stocks$ | async as stocks">
+  <div *ngFor="let s of stocks">
+    <stock-summary [stock]="s"></stock-summary>
   </div>
 </div>
+-->
