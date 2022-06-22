@@ -1,5 +1,6 @@
 export interface Stock {
   symbol: string;
+  companyName: string;
   currentPrice: number;
   change: number;
   percentChange: number;
