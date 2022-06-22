@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { StockAppComponent } from './stock-app.component';
@@ -9,9 +9,16 @@ import { StockDetailsComponent } from './stock/stock-details/stock-details.compo
 import { StockService } from './stock/stock.service';
 import { stockAppRoutes } from './routes';
 import { StockSummaryComponent } from './stock/stock-summary/stock-summary.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, RouterModule.forRoot(stockAppRoutes)],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot(stockAppRoutes),
+    HttpClientModule,
+  ],
   declarations: [
     StockAppComponent,
     StockSearchConponent,

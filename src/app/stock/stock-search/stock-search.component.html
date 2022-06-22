@@ -1,18 +1,35 @@
 <div class="stock-search-container">
-  <form autocomplete="off">
+  <h2>Stock tracking</h2>
+  <hr />
+  <form [formGroup]="stockForm" autocomplete="off" novalidate>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-12">
+        Enter the symbol of a stock to track (i.e. AAPL, TSLA, GOOGL)
+        {{ stockForm.controls.symbolInput?.invalid }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <input name="symbolInput" id="symbolInput" formControlName="symbol" />
+        </div>
+      </div>
+      <div class="col-4">
         <span
-          >Enter the symbol of a stock to track (i.e. AAPL, TSLA, GOOGL)</span
+          (mouseenter)="mouseOverSumbit = true"
+          (mouseleave)="mouseOverSumbit = false"
         >
+          <button type="submit" class="btn btn-primary" [disabled]="true">
+            Track stock
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="row" *ngIf="false">
+      <div class="col-12">
+        <em *ngIf="false"> Please enter a Symbol </em>
+        <em *ngIf="false"> Symbol Maximum Length is {{ 1 }} </em>
       </div>
     </div>
   </form>
 </div>
-<!-- 
-<div *ngIf="stocks$ | async as stocks">
-  <div *ngFor="let s of stocks">
-    <stock-summary [stock]="s"></stock-summary>
-  </div>
-</div>
--->
