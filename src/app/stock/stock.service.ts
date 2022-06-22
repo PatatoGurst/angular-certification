@@ -18,16 +18,16 @@ export class StockService {
 
   getStockDetail(stockSymbol: string): Observable<Stock> {
     let apiQuoteUrl = `${this.apiQuoteBaseUrl}?symbol=${stockSymbol}&token=${this.token}`;
-    let stockApi$: Observable<StockApi> = this.httpClient
-      .get<StockApi>(apiQuoteUrl)
-      .pipe(
-        tap((stock) => console.log(stock))
-        //map((stock: StockApi) => this.mapStockApiToStock(stock, stockSymbol))
-      );
-    let apiCompanyUrl = `${this.apiCompanyBaseUrl}?symbol=${stockSymbol}&token=${this.token}`;
+    console.log(apiQuoteUrl);
+    let stockApi$: Observable<StockApi> =
+      this.httpClient.get<StockApi>(apiQuoteUrl);
+
+    let apiCompanyUrl = `${this.apiCompanyBaseUrl}?q=${stockSymbol}&token=${this.token}`;
+    console.log(apiCompanyUrl);
     let companyName$: Observable<string> = this.httpClient
       .get<CompanyResultApi>(apiCompanyUrl)
       .pipe(map((result) => this.getCompany(stockSymbol, result)));
+
     return combineLatest([stockApi$, companyName$]).pipe(
       map(([stock, name]) =>
         this.mapStockApiCompanyApiToStock(stock, name, stockSymbol)

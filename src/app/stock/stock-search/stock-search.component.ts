@@ -37,8 +37,18 @@ export class StockSearchConponent implements OnInit {
         this.symbolList.push(symbolInput);
         localStorage.setItem('symbol-list', JSON.stringify(this.symbolList));
         this.stockForm.reset();
+        let sub = this.stockService
+          .getStockDetail(symbolInput)
+          .subscribe((stock) => {
+            this.stocks.push(stock);
+            console.log(stock);
+          });
       }
-      console.log(this.symbolList);
     }
+  }
+
+  removeStockTrack(symbolInput: string) {
+    this.symbolList = this.symbolList.filter((s) => s == symbolInput);
+    localStorage.setItem('symbol-list', JSON.stringify(this.symbolList));
   }
 }

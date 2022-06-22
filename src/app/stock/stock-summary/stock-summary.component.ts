@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Stock } from '../stock';
+import { Stock } from '../../model/stock';
 
 @Component({
   selector: 'stock-summary',

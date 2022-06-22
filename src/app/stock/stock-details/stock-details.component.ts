@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Stock } from '../stock';
+import { Stock } from '../../model/stock';
 import { StockService } from '../stock.service';
 
 @Component({
@@ -18,6 +18,7 @@ export class StockDetailsComponent {
   ngOnInit() {
     this.stock = {
       symbol: this.route.snapshot.params['symbol'],
+      companyName: 'LALALA',
       currentPrice: 1,
       change: 2,
       percentChange: 3,
