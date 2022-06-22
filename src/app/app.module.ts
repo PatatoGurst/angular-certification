@@ -10,6 +10,7 @@ import { StockService } from './stock/stock.service';
 import { stockAppRoutes } from './routes';
 import { StockSummaryComponent } from './stock/stock-summary/stock-summary.component';
 import { HttpClientModule } from '@angular/common/http';
+import { dupplicatedSymbol } from './stock/stock-search/dupplicated-symbol.validator';
 
 @NgModule({
   imports: [

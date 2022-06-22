@@ -3,33 +3,42 @@ import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Stock } from '../stock';
 import { StockService } from '../stock.service';
+import { dupplicatedSymbol } from './dupplicated-symbol.validator';
 
 @Component({
   templateUrl: './stock-search.component.html',
   styleUrls: ['./stock-search.component.css'],
 })
 export class StockSearchConponent implements OnInit {
-  symbolInput: string;
   private symbolList: string[];
   stocks: Stock;
   mouseOverSumbit: boolean;
   stockForm: FormGroup;
+  symbolInputForm: FormControl;
 
   constructor(private stockService: StockService) {}
 
   ngOnInit() {
     this.symbolList = [];
-    let symbol = new FormControl('', Validators.required);
+    this.symbolInputForm = new FormControl('', [
+      Validators.required,
+      Validators.maxLength(5),
+      dupplicatedSymbol(this.symbolList),
+    ]);
     this.stockForm = new FormGroup({
-      symbol: symbol,
+      symbol: this.symbolInputForm,
     });
     //this.stocks$ = this.stockService.getStockSummaries(this.symbolList);
   }
 
-  onSubmit(form: NgForm) {
-    if (!this.symbolList.find((s) => s == this.symbolInput)) {
-      this.symbolList.push(this.symbolInput);
+  getStock(symbolInput: string) {
+    if (this.stockForm.valid) {
+      console.log(symbolInput);
+      if (!this.symbolList.find((s) => s == symbolInput)) {
+        this.symbolList.push(symbolInput);
+        this.stockForm.reset();
+      }
+      console.log(this.symbolList);
     }
-    console.log(this.symbolList);
   }
 }
