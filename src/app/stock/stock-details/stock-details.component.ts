@@ -11,12 +11,15 @@ import {
 
 @Component({
   templateUrl: './stock-details.component.html',
+  styleUrls: ['./stock-details.component.css'],
 })
 export class StockDetailsComponent implements OnInit, OnDestroy {
   stock: StockDetail;
   loading: boolean;
   subscriptions: Subscription[] = [];
-  
+  arrowUp = faArrowUp;
+  arrowDown = faArrowDown;
+  equals = faEquals;
 
   constructor(
     private stockService: StockService,
