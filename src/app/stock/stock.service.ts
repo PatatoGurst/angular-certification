@@ -1,17 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, of } from 'rxjs';
-import { concatMap, mergeMap, tap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { CompanyApi } from '../model/company-api';
 import { CompanyResultApi } from '../model/company-result-api';
 import { Stock } from '../model/stock';
 import { StockApi } from '../model/stock-api';
+import { InsiderApi } from '../model/inside-api';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class StockService {
   private apiQuoteBaseUrl: string = 'https://finnhub.io/api/v1/quote';
   private apiCompanyBaseUrl: string = 'https://finnhub.io/api/v1/search';
+  private apiInsiderBaseUrl: string =
+    'https://finnhub.io/api/v1/stock/insider-sentiment';
   private token = 'bu4f8kn48v6uehqi3cqg';
   private stockSource: BehaviorSubject<Stock[]> = new BehaviorSubject<Stock[]>(
     []
@@ -51,9 +54,30 @@ export class StockService {
       .pipe(map((result) => this.getCompanyFromApiResult(stockSymbol, result)));
   }
 
-  //getStockDetail(symcol: string): Observable<StockDetail> {
+  private getInsiderApiObservable(
+    stockSymbol: string,
+    dateFrom: string,
+    dateTo: string
+  ): Observable<InsiderApi> {
+    let apiInsiderUrl = `${this.apiInsiderBaseUrl}?symbol=${stockSymbol}&from=${dateFrom}&to=${dateTo}&token=${this.token}`;
+    return this.httpClient.get<InsiderApi>(apiInsiderUrl);
+  }
 
-  //}
+  getStockDetail(
+    stockSymbol: string,
+    dateFrom: string,
+    dateTo: string
+  ): Observable<StockDetail> {
+    let stockApi$: Observable<StockApi> =
+      this.getStockApiObservable(stockSymbol);
+    let companyName$: Observable<string> =
+      this.getCompanyResultApiObservable(stockSymbol);
+    let stockInsider$: Observable<InsiderApi> = this.getInsiderApiObservable(
+      stockSymbol,
+      dateFrom,
+      dateTo
+    );
+  }
 
   addStock(stockSymbol: string, symbolList: string[]): void {
     this.getStockDetailObservable(stockSymbol).subscribe((stock) => {

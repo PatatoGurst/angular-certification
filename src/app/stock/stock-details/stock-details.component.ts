@@ -19,6 +19,10 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //this.subscription.push(this.stockService.getStockDetail(this.route.snapshot.params['symbol']));
+    let today: Date = new Date();
+    let dateTo = today.toISOString().split('T')[0];
+    today.setMonth(today.getMonth() - 3);
+    let dateFrom = today.toISOString().split('T')[0];
     this.stock = {
       symbol: this.route.snapshot.params['symbol'],
       companyName: 'LALALA',
