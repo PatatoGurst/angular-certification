@@ -6,7 +6,7 @@ import { CompanyApi } from '../model/company-api';
 import { CompanyResultApi } from '../model/company-result-api';
 import { Stock } from '../model/stock';
 import { StockApi } from '../model/stock-api';
-import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class StockService {
@@ -19,10 +19,7 @@ export class StockService {
   stockObservable$: Observable<Stock[]> = this.stockSource.asObservable();
   private pendingCalls: string[] = [];
 
-  constructor(
-    private httpClient: HttpClient,
-    @Inject(TOASTR_TOKEN) private toastr: Toastr
-  ) {}
+  constructor(private httpClient: HttpClient, private toastr: ToastrService) {}
 
   private getStockDetailObservable(stockSymbol: string): Observable<Stock> {
     if (!this.pendingCalls.find((s) => s == stockSymbol)) {

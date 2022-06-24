@@ -11,6 +11,7 @@ import { stockAppRoutes } from './routes';
 import { StockSummaryComponent } from './stock/stock-summary/stock-summary.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { ToastrModule } from 'ngx-toastr';
     RouterModule.forRoot(stockAppRoutes),
     ToastrModule.forRoot(),
     HttpClientModule,
+    BrowserAnimationsModule,
   ],
   declarations: [
     StockAppComponent,

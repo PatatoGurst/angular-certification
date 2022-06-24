@@ -4,5 +4,5 @@ export interface CompanyResultApi {
   /** Number of results. */
   count: number;
   /** Array of search results. */
-  companies: CompanyApi[];
+  result: CompanyApi[];
 }
