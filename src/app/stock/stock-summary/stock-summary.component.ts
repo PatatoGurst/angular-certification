@@ -11,6 +11,8 @@ export class StockSummaryComponent {
   @Input() stock: Stock;
   @Output() remove: EventEmitter<string> = new EventEmitter<string>();
 
+  faCoffe = faCoffee;
+
   removeTrack() {
     this.remove.emit(this.stock.symbol);
   }
