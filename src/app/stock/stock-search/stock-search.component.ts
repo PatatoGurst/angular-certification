@@ -9,12 +9,11 @@ import { dupplicatedSymbol } from './dupplicated-symbol.validator';
   templateUrl: './stock-search.component.html',
   styleUrls: ['./stock-search.component.css'],
 })
-export class StockSearchConponent implements OnInit, OnDestroy {
+export class StockSearchConponent implements OnInit {
   private symbolList: string[];
   stocks$: Observable<Stock[]>;
   stockForm: FormGroup;
   symbolInputForm: FormControl;
-  subscriptions: Subscription[] = [];
 
   constructor(private stockService: StockService) {}
 
@@ -30,10 +29,6 @@ export class StockSearchConponent implements OnInit, OnDestroy {
       symbol: this.symbolInputForm,
     });
     this.stockService.getStockSummaries(this.symbolList);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((s) => s.unsubscribe);
   }
 
   getStock(symbolInput: string) {

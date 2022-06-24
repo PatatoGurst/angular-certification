@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, of } from 'rxjs';
-import { concatMap, tap } from 'rxjs/operators';
+import { concatMap, mergeMap, tap } from 'rxjs/operators';
 import { CompanyApi } from '../model/company-api';
 import { CompanyResultApi } from '../model/company-result-api';
 import { Stock } from '../model/stock';
@@ -49,7 +49,7 @@ export class StockService {
 
   getStockSummaries(symbols: string[]): void {
     of(...symbols)
-      .pipe(concatMap((symbol) => this.getStockDetailObservable(symbol)))
+      .pipe(mergeMap((symbol) => this.getStockDetailObservable(symbol)))
       .subscribe((stock) => {
         this.addStockOrReturnError(stock, symbols);
       });

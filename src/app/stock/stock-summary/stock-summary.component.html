@@ -25,5 +25,11 @@
       High price: {{ stock.highPriceDay | currency: 'USD' }}
     </div>
   </div>
-  <div class="row"></div>
+  <div class="row">
+    <div class="col-12">
+      <button [routerLink]="['/sentiment', stock.symbol]">
+        Go to social sentiment details >
+      </button>
+    </div>
+  </div>
 </div>
