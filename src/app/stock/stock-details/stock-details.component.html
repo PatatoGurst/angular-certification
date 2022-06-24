@@ -1,15 +1,45 @@
 <div class="stock-detail-container">
   <div class="row">
+    <div
+      *ngIf="loading"
+      class="spinner-border ml-auto"
+      role="status"
+      aria-hidden="true"
+    ></div>
+  </div>
+  <div class="row">
     <div class="col-md-11">
       <h1>{{ stock?.symbol }}</h1>
       <h2></h2>
     </div>
   </div>
   <div class="row">
-    <div class="row">
-      <div class="col-12">
-        <button [routerLink]="['/stocks']">< Back to list of stocks</button>
+    <div class="col-4" *ngFor="let sentiment of stock?.insiderSentiments">
+      <div>
+        {{ sentiment.month }}
+        <fa-icon
+          *ngIf="sentiment.change > 0"
+          [icon]="arrowUp"
+          style="color: green"
+        ></fa-icon>
+        <fa-icon
+          *ngIf="sentiment.change < 0"
+          [icon]="arrowDown"
+          style="color: red"
+        ></fa-icon>
+        <fa-icon
+          *ngIf="sentiment.change == 0"
+          [icon]="equals"
+          style="color: black"
+        ></fa-icon>
       </div>
+      <div>{{ sentiment.change }}</div>
+      <div>{{ sentiment.mspr }}</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button [routerLink]="['/stocks']">< Back to list of stocks</button>
     </div>
   </div>
 </div>
