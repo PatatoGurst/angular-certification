@@ -1,4 +1,4 @@
-export class InsiderSentimentApi {
+export interface InsiderSentimentApi {
   /** Net buying/selling from all insiders' transactions. */
   change: number;
   /** Month. */

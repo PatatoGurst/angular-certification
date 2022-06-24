@@ -1,6 +1,6 @@
 import { InsiderSentimentApi } from './insider-sentiment-api';
 
-export class InsiderApi {
+export interface InsiderApi {
   /** Array of sentiment data. */
   data: InsiderSentimentApi[];
   /** Symbol of the company. */
