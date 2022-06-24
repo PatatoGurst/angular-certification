@@ -25,14 +25,10 @@ export class StockService {
     if (!this.pendingCalls.find((s) => s == stockSymbol)) {
       this.pendingCalls.push(stockSymbol);
     }
-    let apiQuoteUrl = `${this.apiQuoteBaseUrl}?symbol=${stockSymbol}&token=${this.token}`;
     let stockApi$: Observable<StockApi> =
-      this.httpClient.get<StockApi>(apiQuoteUrl);
-
-    let apiCompanyUrl = `${this.apiCompanyBaseUrl}?q=${stockSymbol}&token=${this.token}`;
-    let companyName$: Observable<string> = this.httpClient
-      .get<CompanyResultApi>(apiCompanyUrl)
-      .pipe(map((result) => this.getCompanyFromApiResult(stockSymbol, result)));
+      this.getStockApiObservable(stockSymbol);
+    let companyName$: Observable<string> =
+      this.getCompanyResultApiObservable(stockSymbol);
 
     return combineLatest([stockApi$, companyName$]).pipe(
       map(([stock, name]) =>
@@ -41,6 +37,24 @@ export class StockService {
     );
   }
 
+  private getStockApiObservable(stockSymbol: string): Observable<StockApi> {
+    let apiQuoteUrl = `${this.apiQuoteBaseUrl}?symbol=${stockSymbol}&token=${this.token}`;
+    return this.httpClient.get<StockApi>(apiQuoteUrl);
+  }
+
+  private getCompanyResultApiObservable(
+    stockSymbol: string
+  ): Observable<string> {
+    let apiCompanyUrl = `${this.apiCompanyBaseUrl}?q=${stockSymbol}&token=${this.token}`;
+    return this.httpClient
+      .get<CompanyResultApi>(apiCompanyUrl)
+      .pipe(map((result) => this.getCompanyFromApiResult(stockSymbol, result)));
+  }
+
+  //getStockDetail(symcol: string): Observable<StockDetail> {
+
+  //}
+
   addStock(stockSymbol: string, symbolList: string[]): void {
     this.getStockDetailObservable(stockSymbol).subscribe((stock) => {
       this.addStockOrReturnError(stock, symbolList);
@@ -48,11 +62,14 @@ export class StockService {
   }
 
   getStockSummaries(symbols: string[]): void {
-    of(...symbols)
-      .pipe(mergeMap((symbol) => this.getStockDetailObservable(symbol)))
-      .subscribe((stock) => {
-        this.addStockOrReturnError(stock, symbols);
-      });
+    let currentValues = this.stockSource.getValue();
+    if (currentValues.length == 0) {
+      of(...symbols)
+        .pipe(mergeMap((symbol) => this.getStockDetailObservable(symbol)))
+        .subscribe((stock) => {
+          this.addStockOrReturnError(stock, symbols);
+        });
+    }
   }
 
   removeStockTrack(symbol: string): void {

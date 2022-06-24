@@ -16,7 +16,23 @@
     <div class="col-4">
       Opening price: {{ stock.openPriceDay | currency: 'USD' }}
     </div>
-    <div class="col-4"><fa-icon [icon]="faCoffee"></fa-icon></div>
+    <div class="col-4">
+      <fa-icon
+        *ngIf="stock.change > 0"
+        [icon]="arrowUp"
+        style="color: green"
+      ></fa-icon>
+      <fa-icon
+        *ngIf="stock.change < 0"
+        [icon]="arrowDown"
+        style="color: red"
+      ></fa-icon>
+      <fa-icon
+        *ngIf="stock.change == 0"
+        [icon]="equals"
+        style="color: black"
+      ></fa-icon>
+    </div>
   </div>
   <div class="row">
     <div class="col-4">

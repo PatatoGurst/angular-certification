@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Stock } from '../../model/stock';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowUp,
+  faArrowDown,
+  faEquals,
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'stock-summary',
@@ -11,7 +15,9 @@ export class StockSummaryComponent {
   @Input() stock: Stock;
   @Output() remove: EventEmitter<string> = new EventEmitter<string>();
 
-  faCoffee = faCoffee;
+  arrowUp = faArrowUp;
+  arrowDown = faArrowDown;
+  equals = faEquals;
 
   removeTrack() {
     this.remove.emit(this.stock.symbol);

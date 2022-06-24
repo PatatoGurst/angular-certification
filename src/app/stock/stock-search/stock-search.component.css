@@ -4,6 +4,7 @@
 
 .symbolInput {
   padding: 10px;
+  margin: 10px;
 }
 
 button:disabled {

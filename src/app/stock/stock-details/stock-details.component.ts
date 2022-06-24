@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Stock } from '../../model/stock';
+import { Observable, Subscription } from 'rxjs';
+import { StockDetail } from '../../model/stock-detail';
 import { StockService } from '../stock.service';
 
 @Component({
   templateUrl: './stock-details.component.html',
 })
-export class StockDetailsComponent {
-  stock: Stock;
+export class StockDetailsComponent implements OnInit, OnDestroy {
+  stock: StockDetail;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private stockService: StockService,
@@ -16,6 +18,7 @@ export class StockDetailsComponent {
   ) {}
 
   ngOnInit() {
+    //this.subscription.push(this.stockService.getStockDetail(this.route.snapshot.params['symbol']));
     this.stock = {
       symbol: this.route.snapshot.params['symbol'],
       companyName: 'LALALA',
@@ -27,5 +30,9 @@ export class StockDetailsComponent {
       openPriceDay: 6,
       previousClosePrice: 7,
     };
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }
