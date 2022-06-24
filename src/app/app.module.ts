@@ -12,6 +12,7 @@ import { StockSummaryComponent } from './stock/stock-summary/stock-summary.compo
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ToastrModule.forRoot(),
     HttpClientModule,
     BrowserAnimationsModule,
+    FontAwesomeModule,
   ],
   declarations: [
     StockAppComponent,

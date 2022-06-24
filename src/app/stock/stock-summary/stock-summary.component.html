@@ -14,7 +14,11 @@
   <div class="row">
     <div class="col-4">Change today: {{ stock.change }}</div>
     <div class="col-4">
-      Opening price: {{ stock.openPriceDay | currency: 'USD' }}
+      Opening price: {{ stock.openPriceDay | currency: 'USD'
+      }}<span class="bi bi-arrow-up" style="color: green"></span>
+    </div>
+    <div class="col-4">
+      <span class="bi bi-arrow-up" style="color: green"></span>
     </div>
   </div>
   <div class="row">
