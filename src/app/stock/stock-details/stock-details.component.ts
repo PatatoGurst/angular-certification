@@ -10,7 +10,7 @@ import { StockService } from '../stock.service';
 export class StockDetailsComponent implements OnInit, OnDestroy {
   stock: StockDetail;
 
-  subscriptions: Subscription[] = [];
+  subscriptions: Subscription<StockDetail>[] = [];
 
   constructor(
     private stockService: StockService,
@@ -18,22 +18,15 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    //this.subscription.push(this.stockService.getStockDetail(this.route.snapshot.params['symbol']));
+    this.subscriptions.push(
+      this.stockService
+        .getStockDetail(this.route.snapshot.params['symbol'])
+        .pipe((s) => (this.stock = s))
+    );
     let today: Date = new Date();
     let dateTo = today.toISOString().split('T')[0];
     today.setMonth(today.getMonth() - 3);
     let dateFrom = today.toISOString().split('T')[0];
-    this.stock = {
-      symbol: this.route.snapshot.params['symbol'],
-      companyName: 'LALALA',
-      currentPrice: 1,
-      change: 2,
-      percentChange: 3,
-      highPriceDay: 4,
-      lowPriceDay: 5,
-      openPriceDay: 6,
-      previousClosePrice: 7,
-    };
   }
 
   ngOnDestroy() {

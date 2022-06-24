@@ -6,8 +6,10 @@ import { CompanyApi } from '../model/company-api';
 import { CompanyResultApi } from '../model/company-result-api';
 import { Stock } from '../model/stock';
 import { StockApi } from '../model/stock-api';
-import { InsiderApi } from '../model/inside-api';
+import { InsiderApi } from '../model/insider-api';
+import { StockDetail } from '../model/stock-detail';
 import { ToastrService } from 'ngx-toastr';
+import { InsiderSentiment } from '../model/insider-sentiment';
 
 @Injectable()
 export class StockService {
@@ -15,6 +17,20 @@ export class StockService {
   private apiCompanyBaseUrl: string = 'https://finnhub.io/api/v1/search';
   private apiInsiderBaseUrl: string =
     'https://finnhub.io/api/v1/stock/insider-sentiment';
+  private MONTHS: string[] = [
+    'JANUARY',
+    'FEBRUARY',
+    'MARCH',
+    'APRIL',
+    'MAY',
+    'JUNE',
+    'JULY',
+    'AUGUST',
+    'SEPTEMBER',
+    'OCTOBER',
+    'NOVEMBER',
+    'DECEMBER',
+  ];
   private token = 'bu4f8kn48v6uehqi3cqg';
   private stockSource: BehaviorSubject<Stock[]> = new BehaviorSubject<Stock[]>(
     []
@@ -68,14 +84,17 @@ export class StockService {
     dateFrom: string,
     dateTo: string
   ): Observable<StockDetail> {
-    let stockApi$: Observable<StockApi> =
-      this.getStockApiObservable(stockSymbol);
     let companyName$: Observable<string> =
       this.getCompanyResultApiObservable(stockSymbol);
     let stockInsider$: Observable<InsiderApi> = this.getInsiderApiObservable(
       stockSymbol,
       dateFrom,
       dateTo
+    );
+    return combineLatest([companyName$, stockInsider$]).pipe(
+      map(([name, insider]) =>
+        this.mapToStockDetail(name, insider, stockSymbol)
+      )
     );
   }
 
@@ -145,8 +164,8 @@ export class StockService {
    */
   private mapStockApiCompanyApiToStock(
     stockApi: StockApi,
-    name,
-    symbol
+    name: string,
+    symbol: string
   ): Stock {
     return {
       symbol: symbol,
@@ -159,5 +178,29 @@ export class StockService {
       openPriceDay: stockApi.o,
       previousClosePrice: stockApi.pc,
     };
+  }
+
+  private mapToStockDetail(
+    name: string,
+    insider: InsiderApi,
+    symbol: string
+  ): StockDetail {
+    return {
+      symbol: symbol,
+      companyName: name,
+      insiderSentiments: this.mapToInsiderSentiment(insider),
+    };
+  }
+
+  private mapToInsiderSentiment(insider: InsiderApi): InsiderSentiment[] {
+    let insiderSentiments: InsiderSentiment[] = [];
+    if (insider?.data) {
+      insiderSentiments = insider.data.map((d) => ({
+        month: this.MONTHS[(d.month + 11) % 12],
+        change: d.change,
+        mspr: d.mspr,
+      }));
+    }
+    return insiderSentiments;
   }
 }
