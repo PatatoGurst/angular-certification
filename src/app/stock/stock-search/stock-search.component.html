@@ -27,6 +27,19 @@
           Track stock
         </button>
       </div>
+      <div class="col-4">
+        <div
+          *ngIf="getPendingCalls().length > 0"
+          class="d-flex align-items-center"
+        >
+          <strong>Loading... {{ getPendingCalls().join(',') }}</strong>
+          <div
+            class="spinner-border ml-auto"
+            role="status"
+            aria-hidden="true"
+          ></div>
+        </div>
+      </div>
     </div>
     <div class="row" *ngIf="symbolInputForm.invalid && symbolInputForm.dirty">
       <div class="col-12 form-error">
@@ -43,4 +56,11 @@
     </div>
   </form>
 </div>
-<div *ngIf="stocks"></div>
+<div *ngIf="stocks$ | async as stocks">
+  <div *ngFor="let stock of stocks">
+    <stock-summary
+      [stock]="stock"
+      (remove)="removeStockTrack($event)"
+    ></stock-summary>
+  </div>
+</div>

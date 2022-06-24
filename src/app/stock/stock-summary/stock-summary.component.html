@@ -1,0 +1,29 @@
+<div class="stock-summary-container">
+  <div class="row">
+    <div class="col-11">
+      <h2>{{ stock.companyName }}</h2>
+    </div>
+    <div class="col-1">
+      <button
+        (click)="removeTrack()"
+        class="btn-close"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">Change today: {{ stock.change }}</div>
+    <div class="col-4">
+      Opening price: {{ stock.openPriceDay | currency: 'USD' }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      Current price: {{ stock.currentPrice | currency: 'USD' }}
+    </div>
+    <div class="col-4">
+      High price: {{ stock.highPriceDay | currency: 'USD' }}
+    </div>
+  </div>
+  <div class="row"></div>
+</div>
