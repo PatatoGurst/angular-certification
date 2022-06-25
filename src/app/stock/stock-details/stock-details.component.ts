@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { StockDetail } from '../../model/stock-detail';
 import { StockService } from '../stock.service';
+import { ToastrService } from 'ngx-toastr';
 import {
   faArrowUp,
   faArrowDown,
@@ -23,7 +24,8 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private stockService: StockService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -35,15 +37,23 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.stockService
         .getStockDetail(this.route.snapshot.params['symbol'], dateFrom, dateTo)
-        .subscribe(
-          (s) => {
+        .subscribe({
+          next: (s) => {
+            if (!s.companyName) {
+              this.toastr.error('No data found for the requested symbol');
+            }
             this.loading = false;
             return (this.stock = s);
           },
-          (e) => {
+          error: (e) => {
+            console.log(e);
             this.loading = false;
-          }
-        )
+            this.toastr.error(
+              'An error was raised while retrieving data from the server. Please try again later or check the spelling of your symbol'
+            );
+            this.toastr.error(`Error encountered : ${e}`);
+          },
+        })
     );
   }
 

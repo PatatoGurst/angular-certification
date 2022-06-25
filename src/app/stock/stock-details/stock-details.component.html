@@ -37,6 +37,9 @@
       <div>{{ sentiment.mspr }}</div>
     </div>
   </div>
+  <div *ngIf="!loading && stock?.insiderSentiments.length == 0" class="row">
+    <div class="col-12">No insider Data available.</div>
+  </div>
   <div class="row">
     <div class="col-12">
       <button [routerLink]="['/stocks']">< Back to list of stocks</button>

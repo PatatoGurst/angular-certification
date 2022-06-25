@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, catchError } from 'rxjs/operators';
 import { CompanyApi } from '../model/company-api';
 import { CompanyResultApi } from '../model/company-result-api';
 import { Stock } from '../model/stock';
@@ -40,7 +40,7 @@ export class StockService {
 
   constructor(private httpClient: HttpClient, private toastr: ToastrService) {}
 
-  private getStockDetailObservable(stockSymbol: string): Observable<Stock> {
+  private getStockSummaryObservable(stockSymbol: string): Observable<Stock> {
     if (!this.pendingCalls.find((s) => s == stockSymbol)) {
       this.pendingCalls.push(stockSymbol);
     }
@@ -65,9 +65,11 @@ export class StockService {
     stockSymbol: string
   ): Observable<string> {
     let apiCompanyUrl = `${this.apiCompanyBaseUrl}?q=${stockSymbol}&token=${this.token}`;
-    return this.httpClient
-      .get<CompanyResultApi>(apiCompanyUrl)
-      .pipe(map((result) => this.getCompanyFromApiResult(stockSymbol, result)));
+    return this.httpClient.get<CompanyResultApi>(apiCompanyUrl).pipe(
+      map((result) => 
+         this.getCompanyFromApiResult(stockSymbol, result)
+      )
+    );
   }
 
   private getInsiderApiObservable(
@@ -99,8 +101,16 @@ export class StockService {
   }
 
   addStock(stockSymbol: string, symbolList: string[]): void {
-    this.getStockDetailObservable(stockSymbol).subscribe((stock) => {
-      this.addStockOrReturnError(stock, symbolList);
+    this.getStockSummaryObservable(stockSymbol).subscribe({
+      next: (stock) => {
+        this.addStockOrReturnError(stock, symbolList);
+      },
+      error: (e) => {
+        this.toastr.error(
+          'An error was raised while retrieving data from the server. Please try again later or check the spelling of your symbol'
+        );
+        this.toastr.error(`Error encountered : ${e}`);
+      },
     });
   }
 
@@ -108,7 +118,16 @@ export class StockService {
     let currentValues = this.stockSource.getValue();
     if (currentValues.length == 0) {
       of(...symbols)
-        .pipe(mergeMap((symbol) => this.getStockDetailObservable(symbol)))
+        .pipe(
+          mergeMap((symbol) => this.getStockSummaryObservable(symbol)),
+          catchError((e) => {
+            this.toastr.error(
+              'An error was raised while retrieving data from the server. Please try again later or check the spelling of your symbol'
+            );
+            this.toastr.error(`Error encountered : ${e}`);
+            return of(null);
+          })
+        )
         .subscribe((stock) => {
           this.addStockOrReturnError(stock, symbols);
         });
@@ -126,20 +145,22 @@ export class StockService {
   }
 
   private addStockOrReturnError(stock: Stock, symbolList: string[]): void {
-    this.pendingCalls = this.pendingCalls.filter((s) => s != stock.symbol);
-    let currentStocks = this.stockSource.getValue();
-    if (stock.currentPrice && stock.companyName) {
-      currentStocks = currentStocks.concat(stock);
-      this.stockSource.next(currentStocks);
-    } else {
-      this.toastr.error(
-        `The symbol ${stock.symbol} does not correspond to a stock`
-      );
-      this.removeStockTrack(stock.symbol);
-      const symbolIndex = symbolList.findIndex((s) => s == stock.symbol);
-      if (symbolIndex != -1) {
-        symbolList.splice(symbolIndex, 1);
-        localStorage.setItem('symbol-list', JSON.stringify(symbolList));
+    if (stock != null) {
+      this.pendingCalls = this.pendingCalls.filter((s) => s != stock.symbol);
+      let currentStocks = this.stockSource.getValue();
+      if (stock.currentPrice && stock.companyName) {
+        currentStocks = currentStocks.concat(stock);
+        this.stockSource.next(currentStocks);
+      } else {
+        this.toastr.error(
+          `The symbol ${stock.symbol} does not correspond to a stock`
+        );
+        this.removeStockTrack(stock.symbol);
+        const symbolIndex = symbolList.findIndex((s) => s == stock.symbol);
+        if (symbolIndex != -1) {
+          symbolList.splice(symbolIndex, 1);
+          localStorage.setItem('symbol-list', JSON.stringify(symbolList));
+        }
       }
     }
   }
