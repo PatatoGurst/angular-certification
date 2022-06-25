@@ -65,11 +65,9 @@ export class StockService {
     stockSymbol: string
   ): Observable<string> {
     let apiCompanyUrl = `${this.apiCompanyBaseUrl}?q=${stockSymbol}&token=${this.token}`;
-    return this.httpClient.get<CompanyResultApi>(apiCompanyUrl).pipe(
-      map((result) => 
-         this.getCompanyFromApiResult(stockSymbol, result)
-      )
-    );
+    return this.httpClient
+      .get<CompanyResultApi>(apiCompanyUrl)
+      .pipe(map((result) => this.getCompanyFromApiResult(stockSymbol, result)));
   }
 
   private getInsiderApiObservable(
