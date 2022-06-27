@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, of } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
 import { CompanyApi } from '../model/company-api';
